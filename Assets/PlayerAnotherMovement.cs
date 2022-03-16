@@ -10,10 +10,11 @@ public class PlayerAnotherMovement : MonoBehaviour
     Vector2 movement;
     Animator animator;
     public float jumpForce;
-    public bool isGrounded=true; 
+    private bool isGrounded=true; 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
     void Start()
     {
@@ -23,36 +24,36 @@ public class PlayerAnotherMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        movement.x = Input.GetAxisRaw("Horizontal");
-        movement.y = Input.GetAxisRaw("Vertical");
+        movement.x = Input.GetAxis("Horizontal");
+        movement.y = Input.GetAxis("Vertical");
         animator.SetFloat("isRunning", movement.sqrMagnitude);
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space)&& isGrounded==true)
         {
             ToJump();
         }
     }
     private void FixedUpdate()
     {
-        rb.velocity = new Vector2(movement.x, rb.velocity.y);
+        rb.velocity = new Vector2(movement.x*playerSpeed, rb.velocity.y);
         
     }
 
     private void ToJump()
     {
-        rb.velocity = new Vector2(rb.velocity.x, movement.y * jumpForce);
+        rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
         animator.SetBool("isJump", true);
         isGrounded = false;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        
         if (collision.gameObject.tag == "Platform")
         {
-            animator.SetBool("isJump", true);
-        }
-        else
-        {
+            isGrounded = true;
             animator.SetBool("isJump", false);
+
         }
+       
     }
 }
