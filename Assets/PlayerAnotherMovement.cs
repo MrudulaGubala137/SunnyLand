@@ -11,10 +11,12 @@ public class PlayerAnotherMovement : MonoBehaviour
     Animator animator;
     public float jumpForce;
     private bool isGrounded=true; 
+    SpriteRenderer spriteRenderer;
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        spriteRenderer= gameObject.GetComponent<SpriteRenderer>();
     }
     void Start()
     {
@@ -25,7 +27,15 @@ public class PlayerAnotherMovement : MonoBehaviour
     void Update()
     {
         movement.x = Input.GetAxis("Horizontal");
-        movement.y = Input.GetAxis("Vertical");
+        if(movement.x >0)
+        {
+            spriteRenderer.flipX = false;
+        }
+        else if(movement.x <0)
+        {
+            spriteRenderer.flipX = true;
+        }
+        
         animator.SetFloat("isRunning", movement.sqrMagnitude);
         if (Input.GetKeyDown(KeyCode.Space)&& isGrounded==true)
         {
