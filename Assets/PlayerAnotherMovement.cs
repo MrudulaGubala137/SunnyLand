@@ -12,6 +12,8 @@ public class PlayerAnotherMovement : MonoBehaviour
     public float jumpForce;
     private bool isGrounded=true; 
     SpriteRenderer spriteRenderer;
+    public int score;
+    
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -66,4 +68,14 @@ public class PlayerAnotherMovement : MonoBehaviour
         }
        
     }
+    private void OnCollisionEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag=="Gem")
+        {
+            score = score + 10;
+            Destroy(gameObject);
+            Debug.Log(score);
+        }
+    }
+   
 }
